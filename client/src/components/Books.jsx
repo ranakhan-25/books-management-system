@@ -1,33 +1,60 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 const BookCard = lazy(() => import("./BookCard"));
 import useBooks from "../hooks/useBooks";
+import CategoryNav from "./CategoryNav";
 
 const Books = () => {
   const {
     books,
-    // currentBook
+    // currentBook,
     // error,
     // setError,
-    // fetchData,
+    fetchData,
     pagination,
-    // filters,
+    filters,
     // clearCurrentBook,
-    // updataFilter,
+    updataFilter,
     // fetchBookDetails
   } = useBooks();
+
+  const categories = ["All-Category","Fiction","Dystopian","Adventure","Romance","Historical","Psychological","Non-Fiction"]
+
+
+  useEffect(() => {
+    fetchData()
+  },[filters,fetchData])
+
+  const handelCategoryChange = (category) => {
+    updataFilter({
+      genre: category === "All-Category" ? "" : category,
+      page:1,
+    })
+  }
 
   const handelDelete = (bookId) => {
     console.log("delete button is clicked",bookId)
   }
 
+  
 
   return (
     <div className=" max-w-400 mx-auto md:gap-10  px-6 lg:px-[8%] py-10 bg-[#dbeafe97]">
 
-      <div>
-        <h2 className="my-3 font-medium">Showing 1-8 of 10 books</h2>
+      <div className="flex justify-between items-center flex-wrap border-b border-gray-300">
+        <CategoryNav
+          categories={categories}
+          activeCategory={filters.genre || "All-Category"}
+          handelCategoryChange={handelCategoryChange}
+        />
+        <div>sorting</div>
+      </div>
+
+
+      <div className="my-3 font-medium text-gray-600">
+        Showing {pagination.totalPage > 0 ? (pagination.currentPage - 1) * filters.limit + 1 : 0} - <span>{Math.min(pagination.currentPage * filters.limit, pagination.totalBooks)}</span> of {pagination.totalBooks} Books
       </div>
       
+
         <Suspense
           fallback={
             <div className="text-center py-20">

@@ -47,9 +47,9 @@ const ProviderContext = ({ children }) => {
         `http://localhost:5179/api/books/get-all-books?${params}`,
       );
       setPagination({
-        totalBooks: res.data.totlaBooks,
+        totalBooks: res.data.totalBooks,
         currentPage: res.data.currentPage,
-        totalPage: res.data.totlaBooks,
+        totalPage: res.data.totalBooks,
       });
 
       setBooks(res.data.books);
