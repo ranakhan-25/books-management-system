@@ -7,6 +7,7 @@ import Home from './pages/home/Home'
 import App from "./App.jsx"
 import ProviderContext from './context/ProviderContext.jsx'
 import Books from './components/Books.jsx'
+import UpdateBook from './components/UpdateBook.jsx'
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "shop",
         element: <Books />
+      },
+      {
+        path: "book/:id",
+        element: <UpdateBook />
       }
     ]
   }

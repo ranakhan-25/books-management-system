@@ -2,20 +2,20 @@ import React, { lazy, Suspense, useEffect } from "react";
 const BookCard = lazy(() => import("./BookCard"));
 import useBooks from "../hooks/useBooks";
 import CategoryNav from "./CategoryNav";
+import Sorting from "./Sorting";
+import PaginationBtn from "./PaginationBtn";
+import  axios  from "axios";
+import { useNavigate } from "react-router";
 
 const Books = () => {
   const {
     books,
-    // currentBook,
-    // error,
-    // setError,
     fetchData,
     pagination,
     filters,
-    // clearCurrentBook,
     updataFilter,
-    // fetchBookDetails
   } = useBooks();
+  const navigate = useNavigate()
 
   const categories = ["All-Category","Fiction","Dystopian","Adventure","Romance","Historical","Psychological","Non-Fiction"]
 
@@ -31,8 +31,33 @@ const Books = () => {
     })
   }
 
-  const handelDelete = (bookId) => {
-    console.log("delete button is clicked",bookId)
+  const handleSortChange = (sortChange) => {
+    updataFilter({
+      sortBy: sortChange.sortBy,
+      order: sortChange.order,
+      page:1,
+    })
+  }
+
+  const handlePagination = (newPage) => {
+    updataFilter({
+      page:newPage,
+    })
+  }
+
+
+  const handelDelete = async(bookId) => {
+    try {
+      await axios.delete(`http://localhost:5179/api/books/book/${bookId}`)
+      alert("book deleted successfully")
+      fetchData()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handelEdit = (id) => {
+    navigate(`/book/${id}`)
   }
 
   
@@ -46,7 +71,12 @@ const Books = () => {
           activeCategory={filters.genre || "All-Category"}
           handelCategoryChange={handelCategoryChange}
         />
-        <div>sorting</div>
+        <Sorting
+          currentSort={{
+            sortBy: filters.sortBy,
+            order:filters.order,
+          }}
+          handleSortChange={handleSortChange} />
       </div>
 
 
@@ -65,10 +95,15 @@ const Books = () => {
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 lg:gap-5">
             {books &&
               books.map((book) => (
-                <BookCard key={book._id} book={book} handelDelete={handelDelete} />
+                <BookCard key={book._id} book={book} handelDelete={handelDelete} handelEdit={handelEdit} />
               ))}
           </div>
-        </Suspense>
+      </Suspense>
+      {pagination.totalPage > 1 && (<PaginationBtn
+        totalPage={pagination.totalPage}
+        currentPage={pagination.currentPage}
+        handlePagination={handlePagination}
+      />)}
     </div>
   );
 };

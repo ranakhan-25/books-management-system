@@ -49,7 +49,7 @@ const ProviderContext = ({ children }) => {
       setPagination({
         totalBooks: res.data.totalBooks,
         currentPage: res.data.currentPage,
-        totalPage: res.data.totalBooks,
+        totalPage: res.data.totalPage,
       });
 
       setBooks(res.data.books);

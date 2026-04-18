@@ -1,15 +1,11 @@
 import React from "react";
 
-const BookCard = ({ book,handelDelete }) => {
+const BookCard = ({ book,handelDelete,handelEdit }) => {
   const {
     title,
     author,
-    publishedYear,
-    genre,
     price,
-    description,
     imageUrl,
-    bookUrl,
     _id
   } = book;
   return (
@@ -28,7 +24,7 @@ const BookCard = ({ book,handelDelete }) => {
           <div className=" flex justify-between items-center">
             <h2 className="text-yellow-500 font-bold">${price}</h2>
             <div className="flex items-center gap-3">
-              <button className="text-sm underline cursor-pointer">Edit</button>
+              <button className="text-sm underline cursor-pointer" onClick={()=>handelEdit(_id)}>Edit</button>
               <button onClick={()=>handelDelete(_id)} className="text-sm underline cursor-pointer">Delete</button>
             </div>
           </div>
